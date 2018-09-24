@@ -25,5 +25,13 @@ public class Estante {
     public void setNumero(int numero) {
         this.numero = numero;
     }
+
+    public Caja[] getCajas() {
+        return cajas;
+    }
+
+    public void setCajas(Caja[] cajas) {
+        this.cajas = cajas;
+    }
     
 }
