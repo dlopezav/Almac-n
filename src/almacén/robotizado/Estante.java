@@ -13,11 +13,22 @@ public class Estante {
     private int numero;
     private Caja[] cajas;
 
-    public Estante(int numero, Caja[] cajas) {
+    public Estante(int numero) {
         this.numero = numero;
-        this.cajas = new Caja[3];
+        this.cajas=new Caja[3];
     }
-
+    public boolean addCaja(Caja caja){
+        for (int i = 0; i < 3; i++) {
+            if(this.cajas[i]==null){
+                this.cajas[i]=caja;
+                return true;
+            }
+        }
+        return false;
+    }
+    public void deleteCaja(int i){
+        this.cajas[i]=null;
+    }
     public int getNumero() {
         return numero;
     }
