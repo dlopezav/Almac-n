@@ -12,6 +12,7 @@ package almacén.robotizado;
 public class Estante {
     private int numero;
     private Caja[] cajas;
+    private boolean tomado;
 
     public Estante(int numero) {
         this.numero = numero;
@@ -33,16 +34,20 @@ public class Estante {
         return numero;
     }
 
+    public boolean isTomado() {
+        return tomado;
+    }
+
+    public void setTomado(boolean tomado) {
+        this.tomado = tomado;
+    }
+    
     public void setNumero(int numero) {
         this.numero = numero;
     }
 
     public Caja[] getCajas() {
         return cajas;
-    }
-
-    public void setCajas(Caja[] cajas) {
-        this.cajas = cajas;
     }
     
 }

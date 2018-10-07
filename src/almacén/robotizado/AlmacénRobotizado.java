@@ -5,7 +5,9 @@
  */
 package almacén.robotizado;
 
-import becker.robots.*;
+import java.util.HashMap;
+
+
 /**
  *
  * @author Asus
@@ -17,6 +19,18 @@ public class AlmacénRobotizado {
      */
     public static void main(String[] args) {
         Almacen almacen = new Almacen();
+        HashMap<Integer,Integer> pedido=new HashMap<>();
+        almacen.addProducto("Shampo",15000);
+        almacen.addProducto("crema",4500);
+        almacen.addProducto("cepillo",3000);
+        almacen.addProducto("jabon",5000);
+        Integer i=1;
+        for (int j = 0; j < 4; j++) {
+            pedido.put(j, i++);
+        }        
+        
+        almacen.ingresarProductos(pedido);
+        
     }
     
 }

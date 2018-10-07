@@ -11,9 +11,9 @@ package almacén.robotizado;
  */
 public class Caja {
     private int cantidad;
-    private String producto;
+    private Producto producto;
 
-    public Caja(int cantidad, String producto) {
+    public Caja(int cantidad, Producto producto) {
         this.cantidad = cantidad;
         this.producto = producto;
     }
@@ -26,12 +26,14 @@ public class Caja {
         this.cantidad = cantidad;
     }
 
-    public String getProducto() {
+    public Producto getProducto() {
         return producto;
     }
 
-    public void setProducto(String producto) {
+    public void setProducto(Producto producto) {
         this.producto = producto;
     }
+    
+    
     
 }
