@@ -87,62 +87,63 @@ public class Almacen {
          
         
     }
-    public boolean ingresarProductos(HashMap<Integer, Integer> pedido){
+    public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){
         pedido.entrySet().forEach((it) -> {
-            ingresarProducto(productos.get(it.getKey()),it.getValue());
+            ingresarProducto(productos.get(it.getKey()),it.getValue()[0],it.getValue()[1],it.getValue()[2]);
         });
         this.robot=0;
         return true;
     }
-    public boolean ingresarProducto(Producto producto, int cant){
+    public boolean ingresarProducto(Producto producto, int cant, int estante, int caja){
         
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 3; j++) {
-                if(this.estantes[i].getCajas()[j]!=null){
-                    if(this.estantes[i].getCajas()[j].getProducto().equals(producto)&&this.estantes[i].getCajas()[j].getCantidad()<7){
-                        int max=7-this.estantes[i].getCajas()[j].getCantidad();
-                        if(cant<max){
-                            this.estantes[i].getCajas()[j].setCantidad(this.estantes[i].getCajas()[j].getCantidad()+cant);
-                            producto.ingreso(cant, i);
-                            if(!this.estantes[i].isTomado()){
-                                if(robot<8){
-                                    ingresar(empleado[robot++],i);
-                                }
-                            }
-                            return true;
-                        }else{
-                            cant=cant-max;
-                            this.estantes[i].getCajas()[j].setCantidad(7);
-                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
-                        }
-                    }  
-                }else{
-                    if(this.estantes[i].getCajas()[j]==null){
-                        String nuevo="";
-                        if(cant<7){
-                            this.estantes[i].addCaja(new Caja(cant,producto));
-                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
-                            System.out.println(robot);
-                            for (int k = 0; k < 3; k++) {
-                                if(this.estantes[i].getCajas()[k]!=null)nuevo+=this.estantes[i].getCajas()[k].getProducto().getNombre();
-                            }                            
-                            this.stand[i].getIcon().setLabel(nuevo);
-                            return true;
-                        }else{
-                            this.estantes[i].addCaja(new Caja(7,producto));
-                            cant-=7;
-                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
-                            
-                            for (int k = 0; k < 3; k++) {
-                                if(this.estantes[i].getCajas()[k]!=null)nuevo+=this.estantes[i].getCajas()[k].getProducto().getNombre();
-                            }                            
-                            this.stand[i].getIcon().setLabel(nuevo);
-                        }
-                        
-                    }
-                }
-            }
-        }
+//        
+//        for (int i = 0; i < 20; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                if(this.estantes[i].getCajas()[j]!=null){
+//                    if(this.estantes[i].getCajas()[j].getProducto().equals(producto)&&this.estantes[i].getCajas()[j].getCantidad()<7){
+//                        int max=7-this.estantes[i].getCajas()[j].getCantidad();
+//                        if(cant<max){
+//                            this.estantes[i].getCajas()[j].setCantidad(this.estantes[i].getCajas()[j].getCantidad()+cant);
+//                            producto.ingreso(cant, i);
+//                            if(!this.estantes[i].isTomado()){
+//                                if(robot<8){
+//                                    ingresar(empleado[robot++],i);
+//                                }
+//                            }
+//                            return true;
+//                        }else{
+//                            cant=cant-max;
+//                            this.estantes[i].getCajas()[j].setCantidad(7);
+//                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
+//                        }
+//                    }  
+//                }else{
+//                    if(this.estantes[i].getCajas()[j]==null){
+//                        String nuevo="";
+//                        if(cant<7){
+//                            this.estantes[i].addCaja(new Caja(cant,producto));
+//                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
+//                            System.out.println(robot);
+//                            for (int k = 0; k < 3; k++) {
+//                                if(this.estantes[i].getCajas()[k]!=null)nuevo+=this.estantes[i].getCajas()[k].getProducto().getNombre();
+//                            }                            
+//                            this.stand[i].getIcon().setLabel(nuevo);
+//                            return true;
+//                        }else{
+//                            this.estantes[i].addCaja(new Caja(7,producto));
+//                            cant-=7;
+//                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
+//                            
+//                            for (int k = 0; k < 3; k++) {
+//                                if(this.estantes[i].getCajas()[k]!=null)nuevo+=this.estantes[i].getCajas()[k].getProducto().getNombre();
+//                            }                            
+//                            this.stand[i].getIcon().setLabel(nuevo);
+//                        }
+//                        
+//                    }
+//                }
+//            }
+//        }
         return false;
     }
     private void move(Robot R,int c){
