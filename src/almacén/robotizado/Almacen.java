@@ -93,13 +93,12 @@ public class Almacen {
          
         
     }
-    public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){
-        
+    public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){        
         pedido.entrySet().forEach((it) -> {
             if(!this.estantes[it.getValue()[0]].isTomado())ingresar(empleado[robot++],it.getValue()[0]);
             productos.get(it.getKey()).ingreso(it.getValue()[0], it.getValue()[1], it.getValue()[2]);
             estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setProducto(productos.get(it.getKey()));
-            estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setCantidad(it.getValue()[0]);
+            estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setCantidad(estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].getCantidad()+it.getValue()[0]);
             String label="";
             for (int i = 0; i < 3; i++) {
                 if(estantes[it.getValue()[1]].getCajas()[i].getProducto()!=null)label+=estantes[it.getValue()[1]].getCajas()[i].getProducto().getNombre();
