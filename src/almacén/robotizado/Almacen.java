@@ -9,6 +9,8 @@ import becker.robots.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -35,7 +37,7 @@ public class Almacen {
     }
        
     public Almacen(){
-        this.ciudad=new City(0, 0, 14, 14);
+        this.ciudad=new City(0, 0, 11, 14);
         for(int i=1;i<8;i++){
             Wall pared=new Wall(ciudad,i,4,Direction.WEST);
             pared=new Wall(ciudad,i,3,Direction.EAST);
@@ -53,9 +55,15 @@ public class Almacen {
         }
         for (int i = 6; i < 11; i++) {
             Wall pared=new Wall(ciudad,3,i,Direction.NORTH);
+            pared=new Wall(ciudad,4,i,Direction.NORTH);
             pared=new Wall(ciudad,i-3,6,Direction.WEST);
             pared=new Wall(ciudad,i-3,10,Direction.EAST);
+            if(i>6){
+                pared=new Wall(ciudad,i-3,9,Direction.WEST);
+                pared=new Wall(ciudad,i-3,7,Direction.EAST);
+            }
         }
+        Wall pared =new Wall(ciudad,7,8,Direction.SOUTH);
          this.empleado= new Robot[8];
          this.estantes =  new Estante[20];
          for (int i = 0; i < 20; i++) {
@@ -96,7 +104,11 @@ public class Almacen {
                         if(cant<max){
                             this.estantes[i].getCajas()[j].setCantidad(this.estantes[i].getCajas()[j].getCantidad()+cant);
                             producto.ingreso(cant, i);
-                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
+                            if(!this.estantes[i].isTomado()){
+                                if(robot<8){
+                                    ingresar(empleado[robot++],i);
+                                }
+                            }
                             return true;
                         }else{
                             cant=cant-max;
@@ -156,26 +168,23 @@ public class Almacen {
     }
     private void recorrer(Robot R, int c,boolean t){
         for (int i = 0; i < 6; i++) {
-            comprovar(R,i,c+1,t);
             move(R,1);
+            comprovar(R,i,c,t);            
         }
         turn(R,3);
-        for (int i = 6; i < 10; i++) {
+        for (int i = 6; i < 12; i++) {
             comprovar(R,i,c,t);
             move(R,1);
         }
-        comprovar(R,10,c,t);
+        comprovar(R,12,c,t);
         turn(R,3);
-        for (int i = 11; i < 17; i++) {
+        for (int i = 13; i < 19; i++) {
             comprovar(R,i,c,t);
             move(R,1);
         }
-        comprovar(R,17,c,t);
+        comprovar(R,19,c,t);
         turn(R,3);
-        for (int i = 18; i < 20; i++) {
-            comprovar(R,i,c,t);
-            move(R,1);
-        }
+        
     }
     private void ingresar(Robot R,int c){
         estantes[c].setTomado(true);
@@ -187,9 +196,35 @@ public class Almacen {
         turn(R,1);
         recorrer(R,c,true);
         move(R,1);
-        turn(R,1);
+        turn(R,3);
+        if(robot<4){
+            move(R,4);
+            turn(R,1);
+            move(R,1);
+            turn(R,1);
+            move(R,4-robot);
+        }else{
+            move(R,7-robot);
+        }
+        
     }
     public void devolver(Robot R,int c){
+        for (int i = 0; i < robot; i++) {
+            if(i<4)move(empleado[i],i);
+            else{
+                move(empleado[i],i-4);
+                turn(empleado[i],1);
+                move(empleado[i],1);
+                
+            }
+            empleado[i].putThing();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Almacen.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            empleado[i].pickThing();
+        }
         R.pickThing();
         turn(R,2);
         move(R,2);

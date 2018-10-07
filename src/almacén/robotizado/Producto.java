@@ -15,7 +15,7 @@ public class Producto {
     private String nombre;
     private int existencias;
     private double precioPU;
-    private HashMap<Integer, Integer> estantes;
+    private HashMap<Integer[], Integer> estantes;
 
     public Producto(String nombre, double precioPU) {
         this.nombre = nombre;
@@ -35,22 +35,24 @@ public class Producto {
         return precioPU;
     }
 
-    public HashMap<Integer, Integer> getCajas() {
+    public HashMap<Integer[], Integer> getCajas() {
         return estantes;
     }
 
     public void setPrecioPU(double precioPU) {
         this.precioPU = precioPU;
     }
-    public void ingreso(int cant, int caja){
-        this.estantes.put(caja, estantes.getOrDefault(caja,0)+cant);
+    public void ingreso(int cant,int estante, int caja){
+        Integer[] nuevo={estante,caja};
+        this.estantes.put(nuevo, estantes.getOrDefault(nuevo,0)+cant);
         this.existencias+=cant;
     }
-    public void venta(int cant, int caja){
-        if(this.estantes.get(caja)-cant==0){
-            this.estantes.remove(caja);
+    public void venta(int cant,int estante, int caja){
+        Integer[] key={estante,caja};
+        if(this.estantes.get(key)-cant==0){
+            this.estantes.remove(key);
         }else{
-            this.estantes.put(caja, estantes.get(caja)-cant);
+            this.estantes.put(key, estantes.get(key)-cant);
         }
         
     }
