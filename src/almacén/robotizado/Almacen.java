@@ -8,6 +8,7 @@ package almacén.robotizado;
 import becker.robots.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,10 +95,11 @@ public class Almacen {
         
     }
     public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){        
-        pedido.entrySet().forEach((it) -> {
-            if(!this.estantes[it.getValue()[0]].isTomado())ingresar(empleado[robot++],it.getValue()[0]);
+        for(Map.Entry<Integer,Integer[]> it:pedido.entrySet()){
+            if(!this.estantes[it.getValue()[1]].isTomado())ingresar(empleado[robot++],it.getValue()[0]);
             productos.get(it.getKey()).ingreso(it.getValue()[0], it.getValue()[1], it.getValue()[2]);
             estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setProducto(productos.get(it.getKey()));
+            if(estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].getCantidad()+it.getValue()[0]>7)return false;
             estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setCantidad(estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].getCantidad()+it.getValue()[0]);
             String label="";
             for (int i = 0; i < 3; i++) {
@@ -105,12 +107,32 @@ public class Almacen {
             }
             stand[it.getValue()[1]].getIcon().setLabel(label);
             stand[it.getValue()[1]].getIcon().setSize(1);
-        });
+        }
         this.robot=0;
         pedido.entrySet().forEach((it) -> {
             if(this.estantes[it.getValue()[0]].isTomado())devolver(empleado[robot],it.getValue()[0]);
         });
         this.robot=0;
+        return true;
+    }
+    public boolean venta(String cliente, HashMap<Integer, Integer> pedido){
+        Factura factura=new Factura(cliente);
+        for(Map.Entry<Integer,Integer> it:pedido.entrySet()){
+            if(productos.get(it.getKey()).getExitencias()<it.getValue()){
+                System.out.println("no hay suficientes existencias del producto selecionado");
+                return false;
+            }
+            factura.addProducto(productos.get(it.getKey()), it.getValue());
+            Iterator iterator =productos.get(it.getKey()).getCajas().entrySet().iterator();
+            int cantidad=it.getValue();
+            while(cantidad!=0){
+                Map.Entry<Integer[],Integer> e=(Map.Entry)iterator.next();
+                //if(e.getValue())
+                if(!estantes[e.getKey()[0]].isTomado()){
+                    ingresar(empleado[robot++],e.getKey()[0]);
+                }
+            }
+        }
         return true;
     }
     
@@ -204,6 +226,7 @@ public class Almacen {
             move(R,++robot);
             turn(R,3);
             move(R,1);
+            estantes[c].setTomado(false);
             
     }
 }
