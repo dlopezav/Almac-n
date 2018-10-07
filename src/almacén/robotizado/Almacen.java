@@ -29,10 +29,9 @@ public class Almacen {
         for(Producto p: productos){
             if(p.getNombre().equals(nombre)){
                 return false;
-            }else{
-                productos.add(new Producto(nombre,precioPU));
-            }
+            }             
         }
+        productos.add(new Producto(nombre,precioPU));
         return true;
     }
     public void deleteProducto(Producto producto){
@@ -95,13 +94,28 @@ public class Almacen {
         
     }
     public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){
+        
         pedido.entrySet().forEach((it) -> {
-            ingresarProducto(productos.get(it.getKey()),it.getValue()[0],it.getValue()[1],it.getValue()[2]);
+            if(!this.estantes[it.getValue()[0]].isTomado())ingresar(empleado[robot++],it.getValue()[0]);
+            productos.get(it.getKey()).ingreso(it.getValue()[0], it.getValue()[1], it.getValue()[2]);
+            estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setProducto(productos.get(it.getKey()));
+            estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setCantidad(it.getValue()[0]);
+            String label="";
+            for (int i = 0; i < 3; i++) {
+                if(estantes[it.getValue()[1]].getCajas()[i].getProducto()!=null)label+=estantes[it.getValue()[1]].getCajas()[i].getProducto().getNombre();
+            }
+            stand[it.getValue()[1]].getIcon().setLabel(label);
+            stand[it.getValue()[1]].getIcon().setSize(1);
+        });
+        this.robot=0;
+        pedido.entrySet().forEach((it) -> {
+            if(this.estantes[it.getValue()[0]].isTomado())devolver(empleado[robot],it.getValue()[0]);
         });
         this.robot=0;
         return true;
     }
     public boolean ingresarProducto(Producto producto, int cant, int estante, int caja){
+        
         
 //        
 //        for (int i = 0; i < 20; i++) {
@@ -191,7 +205,7 @@ public class Almacen {
             move(R,1);
         }
         comprovar(R,19,c,t);
-        turn(R,3);
+        
         
     }
     private void ingresar(Robot R,int c){
@@ -203,9 +217,10 @@ public class Almacen {
         move(R,2);
         turn(R,1);
         recorrer(R,c,true);
+        turn(R,3);
         move(R,1);
         turn(R,3);
-        if(robot<4){
+        if(robot<5){
             move(R,4);
             turn(R,1);
             move(R,1);
@@ -216,38 +231,32 @@ public class Almacen {
         }
         
     }
-    public void devolver(Robot R,int c){
-        for (int i = 0; i < robot; i++) {
-            if(i<4)move(empleado[i],i);
+    public void devolver(Robot R, int c){
+            if(this.robot<4)move(R,robot);
             else{
-                move(empleado[i],i-4);
-                turn(empleado[i],1);
-                move(empleado[i],1);
-                
+                move(R,robot-4);
+                turn(R,1);
+                move(R,1);                
             }
-            empleado[i].putThing();
+            R.putThing();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Almacen.class.getName()).log(Level.SEVERE, null, ex);
             }
-            empleado[i].pickThing();
-        }
-        R.pickThing();
-        turn(R,2);
-        move(R,2);
-        turn(R,1);
-        move(R,1);
-        turn(R,3);
-        recorrer(R,c,false);
-        turn(R,1);
-        move(R,1);
-        turn(R,3);
-        move(R,6);
-        turn(R,3);
-        move(R,1);
-        turn(R,3);
-        move(R,1);
-        estantes[c].setTomado(false);
+            R.pickThing();
+            move(R, 1);
+            turn(R,3);
+            move(R,4);
+            turn(R,3);
+            recorrer(R, c, false);
+            move(R,1);
+            turn(R,3);
+            move(R,10);
+            turn(R,3);    
+            move(R,++robot);
+            turn(R,3);
+            move(R,1);
+            
     }
 }

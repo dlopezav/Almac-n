@@ -13,11 +13,6 @@ public class Caja {
     private int cantidad;
     private Producto producto;
 
-    public Caja(int cantidad, Producto producto) {
-        this.cantidad = cantidad;
-        this.producto = producto;
-    }
-
     public int getCantidad() {
         return cantidad;
     }

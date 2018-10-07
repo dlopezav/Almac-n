@@ -15,7 +15,7 @@ public class Producto {
     private String nombre;
     private int existencias;
     private double precioPU;
-    private HashMap<Integer[], Integer> estantes;
+    private HashMap<Integer[], Integer> estantes=new HashMap<>();
 
     public Producto(String nombre, double precioPU) {
         this.nombre = nombre;

@@ -17,16 +17,11 @@ public class Estante {
     public Estante(int numero) {
         this.numero = numero;
         this.cajas=new Caja[3];
-    }
-    public boolean addCaja(Caja caja){
         for (int i = 0; i < 3; i++) {
-            if(this.cajas[i]==null){
-                this.cajas[i]=caja;
-                return true;
-            }
+            this.cajas[i]=new Caja();
         }
-        return false;
     }
+    
     public void deleteCaja(int i){
         this.cajas[i]=null;
     }
