@@ -25,8 +25,15 @@ public class Almacen {
     private ArrayList<Producto> productos=new ArrayList<>();
     private int robot=0;
 
-    public void addProducto(String nombre, int precioPU) {
-        this.productos.add(new Producto(nombre, precioPU));
+    public boolean addProducto(String nombre, int precioPU) {
+        for(Producto p: productos){
+            if(p.getNombre().equals(nombre)){
+                return false;
+            }else{
+                productos.add(new Producto(nombre,precioPU));
+            }
+        }
+        return true;
     }
     public void deleteProducto(Producto producto){
         this.productos.remove(producto);
