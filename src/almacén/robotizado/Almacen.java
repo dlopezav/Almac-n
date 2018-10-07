@@ -96,7 +96,7 @@ public class Almacen {
     }
     public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){        
         for(Map.Entry<Integer,Integer[]> it:pedido.entrySet()){
-            if(!this.estantes[it.getValue()[1]].isTomado())ingresar(empleado[robot++],it.getValue()[0]);
+            if(!this.estantes[it.getValue()[1]].isTomado())ingresar(empleado[robot++],it.getValue()[1]);
             productos.get(it.getKey()).ingreso(it.getValue()[0], it.getValue()[1], it.getValue()[2]);
             estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setProducto(productos.get(it.getKey()));
             if(estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].getCantidad()+it.getValue()[0]>7)return false;
@@ -110,7 +110,7 @@ public class Almacen {
         }
         this.robot=0;
         pedido.entrySet().forEach((it) -> {
-            if(this.estantes[it.getValue()[0]].isTomado())devolver(empleado[robot],it.getValue()[0]);
+            if(this.estantes[it.getValue()[1]].isTomado())devolver(empleado[robot],it.getValue()[1]);
         });
         this.robot=0;
         return true;
