@@ -6,8 +6,10 @@
 package almacén.robotizado;
 
 import becker.robots.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  *
@@ -18,25 +20,41 @@ public class Almacen {
     private Robot[] empleado;
     private Estante[] estantes;
     private Thing[] stand;
-    
-    
+    private ArrayList<Producto> productos=new ArrayList<>();
+    private int robot=0;
+
+    public void addProducto(String nombre, int precioPU) {
+        this.productos.add(new Producto(nombre, precioPU));
+    }
+    public void deleteProducto(Producto producto){
+        this.productos.remove(producto);
+    }
+
+    public ArrayList<Producto> getProductos() {
+        return productos;
+    }
+       
     public Almacen(){
-        this.ciudad=new City(0, 0, 12, 12);
+        this.ciudad=new City(0, 0, 14, 14);
         for(int i=1;i<8;i++){
             Wall pared=new Wall(ciudad,i,4,Direction.WEST);
             pared=new Wall(ciudad,i,3,Direction.EAST);
         } 
-        for(int i=1;i<11;i++){
+        for(int i=1;i<13;i++){
             Wall pared=new Wall(ciudad,1,i,Direction.NORTH);
             if(i<10){
                 pared=new Wall(ciudad,i,1,Direction.WEST);
-                pared=new Wall(ciudad,i,10,Direction.EAST);
-                pared=new Wall(ciudad,i,10,Direction.EAST);
+                pared=new Wall(ciudad,i,12,Direction.EAST);
+                //pared=new Wall(ciudad,i,10,Direction.EAST);
             }
         }
-         for(int i=0;i<4;i++){
-            Wall pared=new Wall(ciudad,9,i+1,Direction.SOUTH);
-            pared = new Wall(ciudad,9,i+7,Direction.SOUTH);
+         for(int i=1;i<9;i++){
+            Wall pared=new Wall(ciudad,9,i,Direction.SOUTH); 
+        }
+        for (int i = 6; i < 11; i++) {
+            Wall pared=new Wall(ciudad,3,i,Direction.NORTH);
+            pared=new Wall(ciudad,i-3,6,Direction.WEST);
+            pared=new Wall(ciudad,i-3,10,Direction.EAST);
         }
          this.empleado= new Robot[8];
          this.estantes =  new Estante[20];
@@ -47,26 +65,29 @@ public class Almacen {
          for (int i = 0; i < 8; i++) {
             this.empleado[i]=new Robot(ciudad,8-i,2,Direction.EAST);
         }
-         for (int i = 6; i>0; i--) {
+         for (int i = 6; i>=0; i--) {
+            if(i>0){
             stand[6-i]=new Thing(ciudad,i+1,4);
             stand[6-i].getIcon().setLabel("Estante"+String.valueOf(7-i));
-            if(i>1){
-            stand[11-i]=new Thing(ciudad,1,11-i);
-            stand[11-i].getIcon().setLabel("Estante"+String.valueOf(13-i));
             }
-            stand[17-i]=new Thing(ciudad,8-i,10);
-            stand[17-i].getIcon().setLabel("Estante"+String.valueOf(18-i));
+            stand[13-i]=new Thing(ciudad,1,11-i);
+            stand[13-i].getIcon().setLabel("Estante"+String.valueOf(13-i));
+            
+            stand[19-i]=new Thing(ciudad,8-i,12);
+            stand[19-i].getIcon().setLabel("Estante"+String.valueOf(20-i));
         }
-        stand[17]=new Thing(ciudad,8,10);
-        stand[17].getIcon().setLabel("Estante"+String.valueOf(18));
-
-        stand[18]=new Thing(ciudad,9,9);
-        stand[18].getIcon().setLabel("Estante"+String.valueOf(19));
-        stand[19]=new Thing(ciudad,9,8);
-        stand[19].getIcon().setLabel("Estante"+String.valueOf(20));  
-        ingresarProductos("Shampoo", 5);
+         
+        
     }
-    public boolean ingresarProductos(String producto, int cant){
+    public boolean ingresarProductos(HashMap<Integer, Integer> pedido){
+        pedido.entrySet().forEach((it) -> {
+            ingresarProducto(productos.get(it.getKey()),it.getValue());
+        });
+        this.robot=0;
+        return true;
+    }
+    public boolean ingresarProducto(Producto producto, int cant){
+        
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 3; j++) {
                 if(this.estantes[i].getCajas()[j]!=null){
@@ -74,25 +95,36 @@ public class Almacen {
                         int max=7-this.estantes[i].getCajas()[j].getCantidad();
                         if(cant<max){
                             this.estantes[i].getCajas()[j].setCantidad(this.estantes[i].getCajas()[j].getCantidad()+cant);
-
-                            tomar(empleado[0],i);
+                            producto.ingreso(cant, i);
+                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
                             return true;
                         }else{
                             cant=cant-max;
                             this.estantes[i].getCajas()[j].setCantidad(7);
-                            tomar(empleado[0],i);
+                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
                         }
                     }  
                 }else{
                     if(this.estantes[i].getCajas()[j]==null){
+                        String nuevo="";
                         if(cant<7){
                             this.estantes[i].addCaja(new Caja(cant,producto));
-                            tomar(empleado[0],i);
+                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
+                            System.out.println(robot);
+                            for (int k = 0; k < 3; k++) {
+                                if(this.estantes[i].getCajas()[k]!=null)nuevo+=this.estantes[i].getCajas()[k].getProducto().getNombre();
+                            }                            
+                            this.stand[i].getIcon().setLabel(nuevo);
                             return true;
                         }else{
                             this.estantes[i].addCaja(new Caja(7,producto));
                             cant-=7;
-                            tomar(empleado[0],i);
+                            if(!this.estantes[i].isTomado())ingresar(empleado[robot++],i);
+                            
+                            for (int k = 0; k < 3; k++) {
+                                if(this.estantes[i].getCajas()[k]!=null)nuevo+=this.estantes[i].getCajas()[k].getProducto().getNombre();
+                            }                            
+                            this.stand[i].getIcon().setLabel(nuevo);
                         }
                         
                     }
@@ -115,15 +147,14 @@ public class Almacen {
         if(c==i){
                 turn(R,1);
                 move(R,1);
-                R.pickThing();
+                if(t)R.pickThing();
+                else R.putThing();
                 turn(R,2);
                 move(R,1);
                 turn(R,1);
             }
     }
     private void recorrer(Robot R, int c,boolean t){
-        move(R,3);
-        turn(R,1);
         for (int i = 0; i < 6; i++) {
             comprovar(R,i,c+1,t);
             move(R,1);
@@ -146,22 +177,34 @@ public class Almacen {
             move(R,1);
         }
     }
-    public void tomar(Robot R,int c){
+    private void ingresar(Robot R,int c){
+        estantes[c].setTomado(true);
+        move(R,1);
+        turn(R,3);
+        move(R,8-R.getStreet());
+        turn(R,1);
+        move(R,2);
+        turn(R,1);
         recorrer(R,c,true);
         move(R,1);
         turn(R,1);
-        move(R,2);
-        R.putThing();
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Almacen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    }
+    public void devolver(Robot R,int c){
         R.pickThing();
         turn(R,2);
         move(R,2);
         turn(R,1);
         move(R,1);
-        
+        turn(R,3);
+        recorrer(R,c,false);
+        turn(R,1);
+        move(R,1);
+        turn(R,3);
+        move(R,6);
+        turn(R,3);
+        move(R,1);
+        turn(R,3);
+        move(R,1);
+        estantes[c].setTomado(false);
     }
 }
