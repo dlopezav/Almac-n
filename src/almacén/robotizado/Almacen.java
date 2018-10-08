@@ -169,8 +169,7 @@ public class Almacen {
                     cantidad=0;
                 }else{
                     cantidad-=e[0];
-                    productos.get(it.getKey()).venta(e[0], e[1], e[2]);
-                    
+                    productos.get(it.getKey()).venta(e[0], e[1], e[2]);   
                 }                
             }            
             cantidad=it.getValue();
@@ -202,7 +201,7 @@ public class Almacen {
             R.turnLeft();
         }  
     }
-    private void comprovar(Robot R,int i, int c, boolean t){
+    private void comprobar(Robot R,int i, int c, boolean t){
         if(c==i){
                 turn(R,1);
                 move(R,1);
@@ -216,20 +215,20 @@ public class Almacen {
     private void recorrer(Robot R, int c,boolean t){
         for (int i = 0; i < 6; i++) {
             move(R,1);
-            comprovar(R,i,c,t);            
+            comprobar(R,i,c,t);            
         }
         turn(R,3);
         for (int i = 6; i < 12; i++) {
-            comprovar(R,i,c,t);
+            comprobar(R,i,c,t);
             move(R,1);
         }
-        comprovar(R,12,c,t);
+        comprobar(R,12,c,t);
         turn(R,3);
         for (int i = 13; i < 19; i++) {
-            comprovar(R,i,c,t);
+            comprobar(R,i,c,t);
             move(R,1);
         }
-        comprovar(R,19,c,t);
+        comprobar(R,19,c,t);
         
         
     }

@@ -21,7 +21,6 @@ public class AlmacénRobotizado {
      */
     public static void main(String[] args) {
         Almacen almacen = new Almacen();
-       
          Scanner lectura=new Scanner(System.in).useDelimiter("/n"); 
          Scanner ints=new Scanner(System.in);
         int k=0;
@@ -77,7 +76,7 @@ public class AlmacénRobotizado {
                     }while(n<1 || n>productos.size());
                     Producto pro=productos.get(n-1);
                     do{
-                    System.out.println("Ingrese la cantidad de productos a incluir: ");
+                    System.out.println("Ingrese la cantidad del producto a incluir: ");
                     cantidad=ints.nextInt();
                     }while(cantidad<0||cantidad>7);
                     int v=0,t=0;
@@ -98,7 +97,7 @@ public class AlmacénRobotizado {
                     do{
                     System.out.println("Ingrese el estante: ");
                     estante=ints.nextInt()-1;
-                    }while(estante>19||estante<=0);
+                    }while(estante>19||estante<0);
                     do{
                     System.out.println("Ingrese la caja: ");
                     caja=ints.nextInt()-1;
@@ -115,29 +114,37 @@ public class AlmacénRobotizado {
                     break;
                 case 3:
                     ArrayList<Producto> lista=almacen.getProductos();
+                    HashMap<Integer, Integer> pedido = new HashMap<>();
                     int q=0,o=0,r=0;
                     System.out.println("Ingrese su nombre: ");
                     String neim;
                     neim = lectura.nextLine();
-                    System.out.println("Productos disponibles: ");
-                    for(Producto s: lista){
-                        q++;
-                        System.out.println(q+". "+s.getNombre());
+                    System.out.println("¿cuantos productos diferentes desea comprar?");
+                    int cuantos=ints.nextInt();
+                    for (int i = 0; i < cuantos; i++) {
+                        System.out.println("Productos disponibles: ");
+                        for(Producto s: lista){
+                            q++;
+                            if(s.getExitencias()!=0){
+                                System.out.println(q+". "+s.getNombre());
+                            }                            
+                        }
+                        do{
+                        System.out.println("Ingrese el numero del producto que se desea comprar: ");
+                        o=ints.nextInt()-1;
+                        if(o<0 || o>lista.size()||lista.get(o).getExitencias()==0)System.out.println("producto invalido");
+                        }while(o<0 || o>lista.size()||lista.get(o).getExitencias()==0);
+                        do{
+                        System.out.println("Ingrese la cantidad de productos que se desea comprar: ");
+                        r=ints.nextInt();
+                        if(r>almacen.getProductos().get(o).getExitencias()){
+                            System.out.println("No hay suficientes productos, ingrese nuevamente");
+                        }
+                        }while(r<1 || r>almacen.getProductos().get(r).getExitencias());
+                        
+                        pedido.put(o, r);
                     }
-                    do{
-                    System.out.println("Ingrese el numero del producto que se desea comprar: ");
-                    o=ints.nextInt();
-                    }while(o<1 || o>lista.size());
-                    do{
-                    System.out.println("Ingrese la cantidad de productos que se desea comprar: ");
-                    r=ints.nextInt();
-                    if(r>almacen.getProductos().get(o-1).getExitencias()){
-                        System.out.println("No hay suficientes productos, ingrese nuevamente");
-                    }
-                    }while(r<1 || r>almacen.getProductos().get(r).getExitencias());
-                    HashMap<Integer, Integer> pedido = new HashMap<>();
-                    pedido.put(o, r);
-                    almacen.venta(neim, pedido);
+                    System.out.println(almacen.venta(neim, pedido).toString());
                     
                 break;
             }
