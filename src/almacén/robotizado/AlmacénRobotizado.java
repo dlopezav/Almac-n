@@ -140,7 +140,7 @@ public class AlmacénRobotizado {
                         if(r>almacen.getProductos().get(o).getExitencias()){
                             System.out.println("No hay suficientes productos, ingrese nuevamente");
                         }
-                        }while(r<1 || r>almacen.getProductos().get(r).getExitencias());
+                        }while(r<1 || r>almacen.getProductos().get(o).getExitencias());
                         
                         pedido.put(o, r);
                     }
