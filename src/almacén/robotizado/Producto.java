@@ -49,6 +49,7 @@ public class Producto {
         this.existencias+=cant;
     }
     public void venta(int cant,int estante, int caja){
+        this.existencias-=cant;
         if(this.estantes.get(0)[0]-cant==0){
             this.estantes.remove(0);
         }else{
