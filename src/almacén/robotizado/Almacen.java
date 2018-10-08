@@ -94,8 +94,8 @@ public class Almacen {
             stand[6-i]=new Thing(ciudad,i+1,4);
             stand[6-i].getIcon().setLabel("Estante"+String.valueOf(7-i));
             }
-            stand[13-i]=new Thing(ciudad,1,11-i);
-            stand[13-i].getIcon().setLabel("Estante"+String.valueOf(13-i));
+            stand[12-i]=new Thing(ciudad,1,11-i);
+            stand[12-i].getIcon().setLabel("Estante"+String.valueOf(13-i));
             
             stand[19-i]=new Thing(ciudad,8-i,12);
             stand[19-i].getIcon().setLabel("Estante"+String.valueOf(20-i));
@@ -252,7 +252,7 @@ public class Almacen {
             turn(R,1);
             move(R,4-robot);
         }else{
-            move(R,7-robot);
+            move(R,9-robot);
         }
         
     }
@@ -261,7 +261,9 @@ public class Almacen {
             else{
                 move(R,robot-4);
                 turn(R,1);
-                move(R,1);                
+                move(R,1);
+                turn(R,1);
+                move(R,3);
             }
             R.putThing();
             try {
