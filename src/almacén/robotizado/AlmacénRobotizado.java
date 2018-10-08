@@ -24,13 +24,23 @@ public class AlmacénRobotizado {
        
          Scanner lectura=new Scanner(System.in);
         int k=0;
+        boolean produc=true;
         do{
-            System.out.println("Bienvenido, escoja una opcion");
-            System.out.println("1.Ingresar tipo producto ");
-            System.out.println("2.Ingresar existencias de un producto");
-            System.out.println("3.Comprar producto");
             
-            k = lectura.nextInt();             
+            do{
+            System.out.println("Bienvenido, escoja una opcion");
+            System.out.println("1.Ingresar nuevo tipo  de producto ");
+            System.out.println("2.Añadir existencias a un producto");
+            System.out.println("3.Comprar producto");
+            k = lectura.nextInt();           
+            if(k==2||k==3&&produc){
+                System.out.println("Aun no hay productos en el almacen");
+            }
+            if(k==1){
+                produc = false;
+            }
+            }while(k>3||produc);
+            
             switch(k){
                 case 1:
                     System.out.println("Ingrese el nombre del producto: ");
@@ -59,7 +69,7 @@ public class AlmacénRobotizado {
                     do{
                     System.out.println("Ingrese la cantidad de productos a incluir: ");
                     cantidad=lectura.nextInt();
-                    }while(cantidad<1);
+                    }while(cantidad<0||cantidad>7);
                     do{
                     System.out.println("Ingrese el estante donde se encuentra: ");
                     estante=lectura.nextInt()-1;
@@ -73,274 +83,37 @@ public class AlmacénRobotizado {
                     array[1]=estante;
                     array[2]=caja;
                     HashMap<Integer,Integer[]> product = new HashMap<>();
-                    product.put(n, array);
+                    product.put(n-1, array);
                     almacen.ingresarProductos(product);
                     break;
-//                case 3:
-//                     HashMap<Integer, Estudiante> estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     for (Estudiante estudiante : estudiantes.values()) {
-//                           System.out.println(estudiante.getCodigo()  + " . " + estudiante.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     Estudiante estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     System.out.println("Seleccione el proyecto");
-//                     ArrayList<Proyecto> proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                    cod =  lectura.nextInt();
-//                    
-//                    if(estudiante != null){
-//                       if(universidad.adicionarEstudianteProyecto(estudiante, cod)){
-//                           System.out.println("Se ha adicionado satisfactoriamente el estudiante al proyecto");
-//                       }else{
-//                           System.out.println("Problemas al adicionar al estudiante en el proyecto");
-//                       }
-//                    }
-//                    
-//                    
-//                    break;
-//                case 4:
-//                    
-//                    estudiantes = 
-//                              universidad.listarEstudiantes();
-//                                    
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     
-//                    break;
-//                case 5:
-//                     proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                     
-//                    break;
-//                    
-//                   
-//                case 6:
-//                     System.out.println("Buscar estudiante.");
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     if(estudiante != null){
-//                         System.out.println(estudiante.getCodigo() + " " + estudiante.getNombre());                         System.out.println("Esta registrado en los siguientes proyectos");
-//                     }else{
-//                         System.out.println("El estudiante seleccionado no existe");
-//                     }                     
-//                     break;//                case 3:
-//                     HashMap<Integer, Estudiante> estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     for (Estudiante estudiante : estudiantes.values()) {
-//                           System.out.println(estudiante.getCodigo()  + " . " + estudiante.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     Estudiante estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     System.out.println("Seleccione el proyecto");
-//                     ArrayList<Proyecto> proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                    cod =  lectura.nextInt();
-//                    
-//                    if(estudiante != null){
-//                       if(universidad.adicionarEstudianteProyecto(estudiante, cod)){
-//                           System.out.println("Se ha adicionado satisfactoriamente el estudiante al proyecto");
-//                       }else{
-//                           System.out.println("Problemas al adicionar al estudiante en el proyecto");
-//                       }
-//                    }
-//                    
-//                    
-//                    break;
-//                case 4:
-//                    
-//                    estudiantes = 
-//                              universidad.listarEstudiantes();
-//                                    
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     
-//                    break;
-//                case 5:
-//                     proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                     
-//                    break;
-//                    
-//                   
-//                case 6:
-//                     System.out.println("Buscar estudiante.");
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     if(estudiante != null){
-//                         System.out.println(estudiante.getCodigo() + " " + estudiante.getNombre());                         System.out.println("Esta registrado en los siguientes proyectos");
-//                     }else{
-//                         System.out.println("El estudiante seleccionado no existe");
-//                     }                     
-//                     break;
-//                case 3:
-//                     HashMap<Integer, Estudiante> estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     for (Estudiante estudiante : estudiantes.values()) {
-//                           System.out.println(estudiante.getCodigo()  + " . " + estudiante.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     Estudiante estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     System.out.println("Seleccione el proyecto");
-//                     ArrayList<Proyecto> proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                    cod =  lectura.nextInt();
-//                    
-//                    if(estudiante != null){
-//                       if(universidad.adicionarEstudianteProyecto(estudiante, cod)){
-//                           System.out.println("Se ha adicionado satisfactoriamente el estudiante al proyecto");
-//                       }else{
-//                           System.out.println("Problemas al adicionar al estudiante en el proyecto");
-//                       }
-//                    }
-//                    
-//                    
-//                    break;
-//                case 4:
-//                    
-//                    estudiantes = 
-//                              universidad.listarEstudiantes();
-//                                    
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     
-//                    break;
-//                case 5:
-//                     proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                     
-//                    break;
-//                    
-//                   
-//                case 6:
-//                     System.out.println("Buscar estudiante.");
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     if(estudiante != null){
-//                         System.out.println(estudiante.getCodigo() + " " + estudiante.getNombre());                         System.out.println("Esta registrado en los siguientes proyectos");
-//                     }else{
-//                         System.out.println("El estudiante seleccionado no existe");
-//                     }                     
-//                     break;//                case 3:
-//                     HashMap<Integer, Estudiante> estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     for (Estudiante estudiante : estudiantes.values()) {
-//                           System.out.println(estudiante.getCodigo()  + " . " + estudiante.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     Estudiante estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     System.out.println("Seleccione el proyecto");
-//                     ArrayList<Proyecto> proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                    cod =  lectura.nextInt();
-//                    
-//                    if(estudiante != null){
-//                       if(universidad.adicionarEstudianteProyecto(estudiante, cod)){
-//                           System.out.println("Se ha adicionado satisfactoriamente el estudiante al proyecto");
-//                       }else{
-//                           System.out.println("Problemas al adicionar al estudiante en el proyecto");
-//                       }
-//                    }
-//                    
-//                    
-//                    break;
-//                case 4:
-//                    
-//                    estudiantes = 
-//                              universidad.listarEstudiantes();
-//                                    
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     
-//                    break;
-//                case 5:
-//                     proyectos = universidad.listarProyectos();
-//                     for (int j = 0; j < proyectos.size(); j++) {
-//                         System.out.println(j + " " + proyectos.get(j).getNombre());
-//                    }
-//                     
-//                    break;
-//                    
-//                   
-//                case 6:
-//                     System.out.println("Buscar estudiante.");
-//                     System.out.println("Seleccione el codigo del estudiante");
-//                
-//                     estudiantes = 
-//                              universidad.listarEstudiantes();
-//                     
-//                     for (Estudiante _est : estudiantes.values()) {
-//                           System.out.println(_est.getCodigo()  + " . " + _est.getNombre() );
-//                     }
-//                     cod = lectura.nextInt();
-//                     estudiante = universidad.buscarEstudiante(cod);
-//                     
-//                     if(estudiante != null){
-//                         System.out.println(estudiante.getCodigo() + " " + estudiante.getNombre());                         System.out.println("Esta registrado en los siguientes proyectos");
-//                     }else{
-//                         System.out.println("El estudiante seleccionado no existe");
-//                     }                     
-//                     break;
+                case 3:
+                    ArrayList<Producto> lista=almacen.getProductos();
+                    int q=0,o=0,r=0;
+                    System.out.println("Ingrese su nombre: ");
+                    String name=lectura.next();
+                    System.out.println("Productos existentes: ");
+                    for(Producto p: lista){
+                        q++;
+                        System.out.println(q+". "+p.getNombre());
+                    }
+                    do{
+                    System.out.println("Ingrese el numero del producto que se desea comprar: ");
+                    o=lectura.nextInt();
+                    }while(o<1 || o>lista.size());
+                    do{
+                    System.out.println("Ingrese la cantidad de productos que se desea comprar: ");
+                    r=lectura.nextInt();
+                    if(r>almacen.getProductos().get(r).getExitencias()){
+                        System.out.println("No hay suficientes productos, ingrese nuevamente");
+                    }
+                    }while(r<1 || r>almacen.getProductos().get(r).getExitencias());
+                    HashMap<Integer, Integer> pedido = new HashMap<>();
+                    pedido.put(o, r);
+                    almacen.venta(name, pedido);
+                    
+                break;
             }
             
-           
         }while(k>=0 && k<=4);
     }
     
