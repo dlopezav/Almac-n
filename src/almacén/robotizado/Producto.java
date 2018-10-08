@@ -5,6 +5,7 @@
  */
 package almacén.robotizado;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -15,7 +16,7 @@ public class Producto {
     private String nombre;
     private int existencias;
     private double precioPU;
-    private HashMap<Integer[], Integer> estantes=new HashMap<>();
+    private ArrayList<Integer[]> estantes=new ArrayList<>();
 
     public Producto(String nombre, double precioPU) {
         this.nombre = nombre;
@@ -35,24 +36,24 @@ public class Producto {
         return precioPU;
     }
 
-    public HashMap<Integer[], Integer> getCajas() {
+    public ArrayList<Integer[]> getCajas() {
         return estantes;
-    }
+    } 
 
     public void setPrecioPU(double precioPU) {
         this.precioPU = precioPU;
     }
     public void ingreso(int cant,int estante, int caja){
-        Integer[] nuevo={estante,caja};
-        this.estantes.put(nuevo, estantes.getOrDefault(nuevo,0)+cant);
+        Integer[] nuevo={cant,estante,caja};
+        this.estantes.add(nuevo);
         this.existencias+=cant;
     }
     public void venta(int cant,int estante, int caja){
-        Integer[] key={estante,caja};
-        if(this.estantes.get(key)-cant==0){
-            this.estantes.remove(key);
+        if(this.estantes.get(0)[0]-cant==0){
+            this.estantes.remove(0);
         }else{
-            this.estantes.put(key, estantes.get(key)-cant);
+            Integer[] key={this.estantes.get(0)[0]-cant,estante,caja};
+            this.estantes.add(0, key);
         }
         
     }

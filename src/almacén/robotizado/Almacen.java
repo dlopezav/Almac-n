@@ -25,6 +25,7 @@ public class Almacen {
     private Thing[] stand;
     private ArrayList<Producto> productos=new ArrayList<>();
     private int robot=0;
+    private ArrayList<Factura> facturas;
 
     public boolean addProducto(String nombre, int precioPU) {
         for(Producto p: productos){
@@ -115,25 +116,43 @@ public class Almacen {
         this.robot=0;
         return true;
     }
-    public boolean venta(String cliente, HashMap<Integer, Integer> pedido){
+    public Factura venta(String cliente, HashMap<Integer, Integer> pedido){
         Factura factura=new Factura(cliente);
         for(Map.Entry<Integer,Integer> it:pedido.entrySet()){
-            if(productos.get(it.getKey()).getExitencias()<it.getValue()){
-                System.out.println("no hay suficientes existencias del producto selecionado");
-                return false;
-            }
             factura.addProducto(productos.get(it.getKey()), it.getValue());
-            Iterator iterator =productos.get(it.getKey()).getCajas().entrySet().iterator();
             int cantidad=it.getValue();
+            ArrayList<Integer[]> bk=(ArrayList)productos.get(it.getKey()).getCajas().clone();
             while(cantidad!=0){
-                Map.Entry<Integer[],Integer> e=(Map.Entry)iterator.next();
-                //if(e.getValue())
-                if(!estantes[e.getKey()[0]].isTomado()){
-                    ingresar(empleado[robot++],e.getKey()[0]);
+                Integer[]e=productos.get(it.getKey()).getCajas().get(0);
+                if(!estantes[e[1]].isTomado()){
+                    ingresar(empleado[robot++],e[1]);
                 }
+                if(e[0]>=cantidad){
+                    productos.get(it.getKey()).venta(cantidad, e[1], e[2]);
+                    cantidad=0;
+                }else{
+                    cantidad-=e[0];
+                    productos.get(it.getKey()).venta(e[0], e[1], e[2]);
+                    
+                }                
+            }            
+            cantidad=it.getValue();
+            robot=0;
+            while(cantidad!=0){
+                Integer[]e=bk.get(0);
+                if(estantes[e[1]].isTomado()){
+                    devolver(empleado[robot],e[1]);
+                }
+                if(e[0]>cantidad){                    
+                    cantidad=0;
+                }else{
+                    cantidad-=e[0];
+                    bk.remove(0);
+                }                
             }
+            robot=0;
         }
-        return true;
+        return factura;
     }
     
     private void move(Robot R,int c){
