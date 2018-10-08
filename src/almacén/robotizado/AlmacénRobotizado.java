@@ -22,9 +22,10 @@ public class AlmacénRobotizado {
     public static void main(String[] args) {
         Almacen almacen = new Almacen();
        
-         Scanner lectura=new Scanner(System.in);
+         Scanner lectura=new Scanner(System.in).useDelimiter("/n"); 
+         Scanner ints=new Scanner(System.in);
         int k=0;
-        boolean produc=true;
+        boolean produc=false;
         do{
             
             do{
@@ -32,30 +33,38 @@ public class AlmacénRobotizado {
             System.out.println("1.Ingresar nuevo tipo  de producto ");
             System.out.println("2.Añadir existencias a un producto");
             System.out.println("3.Comprar producto");
-            k = lectura.nextInt();           
-            if(k==2||k==3&&produc){
+            k = ints.nextInt();           
+            if(k==2||k==3&&produc==false){
                 System.out.println("Aun no hay productos en el almacen");
             }
             if(k==1){
-                produc = false;
+                produc = true;
             }
-            }while(k>3||produc);
+            }while(k>3||produc==false);
             
             switch(k){
                 case 1:
-                    System.out.println("Ingrese el nombre del producto: ");
-                    String nombre=lectura.next();
-                    System.out.println("Ingrese el precio del producto: ");
-                    int cod=lectura.nextInt();
-                    
-                    if(almacen.addProducto(nombre, cod)){
-                        System.out.println("Se ha adicionado satisfactoriamente el producto");
-                    }else{
-                        System.out.println("Problemas al adicionar el producto, ya existe");
+                    System.out.println("Ingrese la cantidad de productos que creara: ");
+                    int a=ints.nextInt();
+                    for(int i=0;i<a;i++){
+                        System.out.println("Ingrese el nombre del producto: ");
+                        String nombre=lectura.nextLine();
+                        System.out.println("Ingrese el precio del producto: ");
+                        int cod=ints.nextInt();
+                        if(almacen.addProducto(nombre, cod)){
+                            System.out.println("Se ha adicionado satisfactoriamente el producto");
+                        }else{
+                            System.out.println("Problemas al adicionar el producto, ya existe");
+                        }
                     }
                     break;
                 case 2:
                     ArrayList<Producto> productos=almacen.getProductos();
+                    HashMap<Integer,Integer[]> product = new HashMap<>();
+                    boolean niu[][]= new boolean[20][3];
+                    System.out.println("¿Cuantos productos diferentes ingresara?");
+                    int b=ints.nextInt();
+                    for(int l=0;l<b;l++){
                     int m=0,n=0,estante=0,caja=0,cantidad =0;
                     System.out.println("Productos existentes: ");
                     for(Producto p: productos){
@@ -64,52 +73,71 @@ public class AlmacénRobotizado {
                     }
                     do{
                     System.out.println("Ingrese el numero del producto: ");
-                    n=lectura.nextInt();
+                    n=ints.nextInt();
                     }while(n<1 || n>productos.size());
+                    Producto pro=productos.get(n-1);
                     do{
                     System.out.println("Ingrese la cantidad de productos a incluir: ");
-                    cantidad=lectura.nextInt();
+                    cantidad=ints.nextInt();
                     }while(cantidad<0||cantidad>7);
+                    int v=0,t=0;
+                    System.out.println("Los espacios libres son: ");
+                    for(int i=0;i<20;i++){
+                        for(int j=0;j<3;j++){
+                            if(almacen.getEstantes()[i].getCajas()[j].getProducto()!=null){
+                                if(pro.equals(almacen.getEstantes()[i].getCajas()[j].getProducto())&&7-almacen.getEstantes()[i].getCajas()[j].getCantidad()>=cantidad &&!niu[i][j]){
+                                    System.out.println("El estante donde puede añadir productos es el "+(i+1)+" y la caja es la "+(j+1));
+                                j=3;
+                                i=20;
+                                }
+                            }else{
+                                if(!niu[i][j])System.out.println("Estante: "+(i+1)+" Caja:"+(j+1));
+                            }
+                        }
+                    }
                     do{
-                    System.out.println("Ingrese el estante donde se encuentra: ");
-                    estante=lectura.nextInt()-1;
-                    }while(estante<0 || estante >19);
+                    System.out.println("Ingrese el estante: ");
+                    estante=ints.nextInt()-1;
+                    }while(estante>19||estante<=0);
                     do{
-                    System.out.println("Ingrese caja donde se encuentra: ");
-                    caja=lectura.nextInt()-1;
-                    }while(caja<0 || caja>2);
+                    System.out.println("Ingrese la caja: ");
+                    caja=ints.nextInt()-1;
+                    }while(caja<0||caja>3);
+                    niu[estante][caja]=true;
                     Integer[] array=new Integer[3];
                     array[0]=cantidad;
                     array[1]=estante;
                     array[2]=caja;
-                    HashMap<Integer,Integer[]> product = new HashMap<>();
+                    
                     product.put(n-1, array);
+                    }
                     almacen.ingresarProductos(product);
                     break;
                 case 3:
                     ArrayList<Producto> lista=almacen.getProductos();
                     int q=0,o=0,r=0;
                     System.out.println("Ingrese su nombre: ");
-                    String name=lectura.next();
-                    System.out.println("Productos existentes: ");
-                    for(Producto p: lista){
+                    String neim;
+                    neim = lectura.nextLine();
+                    System.out.println("Productos disponibles: ");
+                    for(Producto s: lista){
                         q++;
-                        System.out.println(q+". "+p.getNombre());
+                        System.out.println(q+". "+s.getNombre());
                     }
                     do{
                     System.out.println("Ingrese el numero del producto que se desea comprar: ");
-                    o=lectura.nextInt();
+                    o=ints.nextInt();
                     }while(o<1 || o>lista.size());
                     do{
                     System.out.println("Ingrese la cantidad de productos que se desea comprar: ");
-                    r=lectura.nextInt();
-                    if(r>almacen.getProductos().get(r).getExitencias()){
+                    r=ints.nextInt();
+                    if(r>almacen.getProductos().get(o-1).getExitencias()){
                         System.out.println("No hay suficientes productos, ingrese nuevamente");
                     }
                     }while(r<1 || r>almacen.getProductos().get(r).getExitencias());
                     HashMap<Integer, Integer> pedido = new HashMap<>();
                     pedido.put(o, r);
-                    almacen.venta(name, pedido);
+                    almacen.venta(neim, pedido);
                     
                 break;
             }
