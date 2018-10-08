@@ -27,6 +27,14 @@ public class Almacen {
     private int robot=0;
     private ArrayList<Factura> facturas;
 
+    public Estante[] getEstantes() {
+        return estantes;
+    }
+
+    public ArrayList<Factura> getFacturas() {
+        return facturas;
+    }
+    
     public boolean addProducto(String nombre, int precioPU) {
         for(Producto p: productos){
             if(p.getNombre().equals(nombre)){
@@ -96,7 +104,10 @@ public class Almacen {
         
     }
     public boolean ingresarProductos(HashMap<Integer, Integer[]> pedido){        
-        for(Map.Entry<Integer,Integer[]> it:pedido.entrySet()){
+        do{
+        int k=0;
+        for (Iterator<Map.Entry<Integer,Integer[]>> iterator = pedido.entrySet().iterator(); iterator.hasNext()&&k<8;k++) {
+            Map.Entry<Integer,Integer[]> it = iterator.next();
             if(!this.estantes[it.getValue()[1]].isTomado())ingresar(empleado[robot++],it.getValue()[1]);
             productos.get(it.getKey()).ingreso(it.getValue()[0], it.getValue()[1], it.getValue()[2]);
             estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setProducto(productos.get(it.getKey()));
@@ -109,11 +120,37 @@ public class Almacen {
             stand[it.getValue()[1]].getIcon().setLabel(label);
             stand[it.getValue()[1]].getIcon().setSize(1);
         }
+        
+        /*for(Map.Entry<Integer,Integer[]> it:pedido.entrySet()){
+            if(!this.estantes[it.getValue()[1]].isTomado())ingresar(empleado[robot++],it.getValue()[1]);
+            productos.get(it.getKey()).ingreso(it.getValue()[0], it.getValue()[1], it.getValue()[2]);
+            estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setProducto(productos.get(it.getKey()));
+            if(estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].getCantidad()+it.getValue()[0]>7)return false;
+            estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].setCantidad(estantes[it.getValue()[1]].getCajas()[it.getValue()[2]].getCantidad()+it.getValue()[0]);
+            String label="";
+            for (int i = 0; i < 3; i++) {
+                if(estantes[it.getValue()[1]].getCajas()[i].getProducto()!=null)label+=estantes[it.getValue()[1]].getCajas()[i].getProducto().getNombre();
+            }
+            stand[it.getValue()[1]].getIcon().setLabel(label);
+            stand[it.getValue()[1]].getIcon().setSize(1);
+        }*/
         this.robot=0;
-        pedido.entrySet().forEach((it) -> {
+        /*pedido.entrySet().forEach((it) -> {
             if(this.estantes[it.getValue()[1]].isTomado())devolver(empleado[robot],it.getValue()[1]);
-        });
+        });*/
+        k=0;
+        int[]m=new int[8];
+        for (Iterator<Map.Entry<Integer,Integer[]>> iterator = pedido.entrySet().iterator(); iterator.hasNext()&&k<8;k++) {
+            Map.Entry<Integer,Integer[]> it = iterator.next();
+            if(this.estantes[it.getValue()[1]].isTomado())devolver(empleado[robot],it.getValue()[1]);
+            m[k]=it.getKey();
+        }
+        for (k=0;k<8;k++) {
+            pedido.remove(m[k]);
+            
+        }
         this.robot=0;
+        }while(!pedido.isEmpty());
         return true;
     }
     public Factura venta(String cliente, HashMap<Integer, Integer> pedido){
